@@ -1,0 +1,33 @@
+name: Trivy workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Usando a action com todos os parametros do Aqua Trivy no default
+      # mais informações: https://github.com/aquasecurity/trivy-action
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t fguisso/hash-python:${{ github.sha }} .
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'fguisso/hash-python:${{ github.sha }}'
+          format: 'json' 
+          output: results.json
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: trivy-results
+          path: results.json
