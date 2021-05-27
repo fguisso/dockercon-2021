@@ -1,15 +1,12 @@
-FROM node:10
+FROM python:3-onbuild
 
-ENV HOME=/home/app
+WORKDIR /opt/microservices
+COPY app.py /opt/microservices/
 
-RUN apt-get update && apt-get install htop
+EXPOSE 5000
 
-COPY package.json package-lock.json $HOME/node_docker/
+ARG service_version
+ENV SERVICE_VERSION ${service_version:-v1}
 
-WORKDIR $HOME/node_docker
-
-RUN npm install --silent --progress=false
-
-COPY . $HOME/node_docker
-
-CMD ["npm", "start"]
+WORKDIR /opt/microservices
+CMD ["python", "app.py"]
