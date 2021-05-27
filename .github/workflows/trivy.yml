@@ -18,12 +18,12 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build -t fguisso/hash-python:${{ github.sha }} .
+          docker build -t fguisso/dockercon-2021:${{ github.sha }} .
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'fguisso/hash-python:${{ github.sha }}'
+          image-ref: 'fguisso/dockercon-2021:${{ github.sha }}'
           format: 'json' 
           output: results.json
 
